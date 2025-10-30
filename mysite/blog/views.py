@@ -8,7 +8,7 @@ def starting_page(request):
 
 def posts(request):
   """Display a list of all blog posts."""
-  pass
+  return render(request,"blog/all-posts.html")
 
 def post_detail(request):
   """Show the details for a single blog post."""

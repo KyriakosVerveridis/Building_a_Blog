@@ -11,12 +11,7 @@
 {% endblock css_files %}
 
 {% block content %}
-  <header id="main-navigation">
-    <h1><a href="">Kyriakos Blog</a></h1>
-    <nav>
-      <a href="">All Posts</a>
-    </nav>
-  </header>
+  
 
   {% comment %}
     This section contains a welcome message and image.
@@ -35,20 +30,12 @@
   <section id="latest-posts">
     <h2>My Latest Posts</h2>
 
+    {% comment %}
+    Include the "post.html" template, which contains the structure for a single blog post.
+    This makes the code more modular and easier to maintain.
+    {% endcomment %}
     <ul>
-      <li>
-        <article class="post">
-          <a href="">
-            <img src="{% static "blog/images/mountains.jpg" %}" alt="Mountain Hiking"/>
-            <div class="post__content">
-              <h3>Mountain Hiking</h3>
-              <p>There's nothing like the views you get when hiking the 
-                 mountains!And I was't even prepared for what happened whilst I 
-                 was enjoying the view!
-            </div>
-          </a>
-        </article>
-      </li>
+      {% include "blog/includes/post.html" %}
     </ul>
   </section>
 
