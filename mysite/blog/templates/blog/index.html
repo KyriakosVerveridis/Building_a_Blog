@@ -31,11 +31,12 @@
     <h2>My Latest Posts</h2>
 
     {% comment %}
-    Include the "post.html" template, which contains the structure for a single blog post.
-    This makes the code more modular and easier to maintain.
+    Loop through all posts and include the post template for each one
     {% endcomment %}
     <ul>
-      {% include "blog/includes/post.html" %}
+      {% for post in posts %}
+        {% include "blog/includes/post.html" %}
+      {% endfor %} 
     </ul>
   </section>
 

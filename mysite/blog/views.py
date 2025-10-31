@@ -1,7 +1,7 @@
 from datetime import date
 from django.shortcuts import render
 
-posts = [
+all_posts = [
   {
       "slug": "hike-in-the-mountains",
       "image": "mountains.jpg",
@@ -67,11 +67,25 @@ posts = [
   }
 ]
 
+def get_date(post):
+
+  """Get the date from the given post dictionary"""
+  return post["date"]
+
 # Create your views here.
 
 def starting_page(request):
+  sorted_posts = sorted(all_posts, key=get_date)
+  latest_posts = sorted_posts[-3:]
+
+  """Context dictionary for the template: contains the 3 
+  most recent posts to display on the index.html template"""
+  context = {
+    "posts": latest_posts
+  }
+
   """Render the starting (home) page of the blog."""
-  return render(request,"blog/index.html")
+  return render(request,"blog/index.html",context )
 
 def posts(request):
   """Display a list of all blog posts."""
