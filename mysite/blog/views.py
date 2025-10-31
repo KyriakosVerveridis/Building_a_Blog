@@ -10,6 +10,6 @@ def posts(request):
   """Display a list of all blog posts."""
   return render(request,"blog/all-posts.html")
 
-def post_detail(request):
+def post_detail(request,slug):
   """Show the details for a single blog post."""
-  pass
+  return render(request,"blog/post-detail.html")

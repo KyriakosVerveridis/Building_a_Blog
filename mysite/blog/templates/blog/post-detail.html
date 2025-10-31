@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+  This Post Title
+{% endblock title %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "blog/post-detail.css" %}" />
+{% endblock css_files %}
+
+{% block content %}
+  <section id="summary">
+    <h2>Post Title</h2>
+    <article>
+      <img src="{% static "blog/images/mountains.jpg" %}" alt="Post Title"/>
+      <adress>By Kyriakos</adress>
+      <div>
+        Latest update on <time>July 10th</time>
+      </div>
+    </article>
+  </section>
+
+  <main>
+    <p>
+      "Lorem ipsum" is a placeholder text used in graphic design, publishing, 
+      and web development to demonstrate the visual form of a document without 
+      the distraction of meaningful content. It's a jumble of Latin-like words, 
+      originally derived from a classical Latin text, that helps designers focus 
+      on layout, typography, and visual hierarchy before the final content is ready.
+    </p>
+    <p>
+      "Lorem ipsum" is a placeholder text used in graphic design, publishing, 
+      and web development to demonstrate the visual form of a document without 
+      the distraction of meaningful content. It's a jumble of Latin-like words, 
+      originally derived from a classical Latin text, that helps designers focus 
+      on layout, typography, and visual hierarchy before the final content is ready.
+    </p>
+    <p>
+      "Lorem ipsum" is a placeholder text used in graphic design, publishing, 
+      and web development to demonstrate the visual form of a document without 
+      the distraction of meaningful content. It's a jumble of Latin-like words, 
+      originally derived from a classical Latin text, that helps designers focus 
+      on layout, typography, and visual hierarchy before the final content is ready.
+    </p>
+    <p>
+      "Lorem ipsum" is a placeholder text used in graphic design, publishing, 
+      and web development to demonstrate the visual form of a document without 
+      the distraction of meaningful content. It's a jumble of Latin-like words, 
+      originally derived from a classical Latin text, that helps designers focus 
+      on layout, typography, and visual hierarchy before the final content is ready.
+    </p>
+  </main>
+{% endblock content %}
