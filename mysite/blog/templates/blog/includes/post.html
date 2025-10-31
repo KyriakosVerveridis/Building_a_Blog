@@ -1,7 +1,11 @@
 {% load static %}
 <li>
   <article class="post">
-    <a href="">
+
+    {% comment  %}
+    For the moment I wil hard code a value here "the-mountains"
+    {% endcomment %}
+    <a href="{% url "post-detail-page" "the-mountains" %}">
       <img src="{% static "blog/images/mountains.jpg" %}" alt="Mountain Hiking"/>
       <div class="post__content">
         <h3>Mountain Hiking</h3>
