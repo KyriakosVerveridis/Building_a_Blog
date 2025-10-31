@@ -19,16 +19,10 @@
   This makes the code more modular and easier to maintain.
   {% endcomment %}
   <ul>
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
-    {% include "blog/includes/post.html" %}
+    {% for post in all_posts %}
+      {% include "blog/includes/post.html" %}
+    {% endfor %}
+    
   </ul>
 </section>
 {% endblock content %}
