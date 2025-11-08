@@ -10,6 +10,9 @@ class Tag(models.Model):
 	"""
 	caption = models.CharField(max_length=20) # Post's caption
 
+	def __str__(self):
+		return self.caption # String representation of the Tag object
+
 
 class Author(models.Model):
 	"""
@@ -18,6 +21,12 @@ class Author(models.Model):
 	first_name = models.CharField(max_length=100) # Author's first name
 	last_name = models.CharField(max_length=100) # Author's last name
 	email_address = models.EmailField()	# Author's email address
+
+	def full_name(self):
+		return f"{self.first_name} {self.last_name}"
+
+	def __str__(self):
+		return self.full_name() # String representation of the Author object
 
 
 class Post(models.Model):
