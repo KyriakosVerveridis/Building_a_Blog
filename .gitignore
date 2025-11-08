@@ -31,3 +31,6 @@ ENV/
 # System / Misc
 .DS_Store
 Thumbs.db
+
+# Personal notes
+docs/
