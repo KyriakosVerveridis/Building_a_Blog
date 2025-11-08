@@ -3,6 +3,15 @@ from django.core.validators import MinLengthValidator
 
 # Create your models here.
 
+class Author(models.Model):
+	"""
+	Author model represents a blog author.
+	"""
+	first_name = models.CharField(max_length=100) # Author's first name
+	last_name = models.CharField(max_length=100) # Author's last name
+	email_address = models.EmailField()	# Author's email address
+
+
 class Post(models.Model):
 	"""
 	Post model represents a blog post.
@@ -13,6 +22,16 @@ class Post(models.Model):
 	date = models.DateField(auto_now=True) # Last modification date, automatically updated
 	slug = models.SlugField(unique=True, db_index=True) # URL-friendly unique identifier
 	content = models.TextField(validators=[MinLengthValidator(10)]) # Full post content
+	author = models.ForeignKey(
+    Author,
+    on_delete=models.SET_NULL,
+    null=True,
+    related_name="posts"
+)  # Author of this post (relationship)
+
+
+
+
     
 	
     
