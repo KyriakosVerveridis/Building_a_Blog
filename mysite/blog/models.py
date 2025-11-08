@@ -3,6 +3,14 @@ from django.core.validators import MinLengthValidator
 
 # Create your models here.
 
+
+class Tag(models.Model):
+	"""
+	Tag model represents a blog tag.
+	"""
+	caption = models.CharField(max_length=20) # Post's caption
+
+
 class Author(models.Model):
 	"""
 	Author model represents a blog author.
@@ -28,6 +36,8 @@ class Post(models.Model):
     null=True,
     related_name="posts"
 )  # Author of this post (relationship)
+	tags = models.ManyToManyField(Tag)
+	
 
 
 
