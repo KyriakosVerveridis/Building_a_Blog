@@ -2,27 +2,27 @@
 {% load static %}
 
 {% block title %}
-  All My Posts
+    All My Posts
 {% endblock title %}
 
 {% block css_files %}
-  <link rel="stylesheet" href="{% static "blog/post.css" %}" />
-  <link rel="stylesheet" href="{% static "blog/all-posts.css" %}" />
+    <link rel="stylesheet" href="{% static "blog/post.css" %}" />
+    <link rel="stylesheet" href="{% static "blog/all-posts.css" %}" />
 {% endblock css_files %}
 
 {% block content %}
 <section id="all-posts">
-  <h2>My Collected Posts</h2>
-  
-  {% comment %}
-  Include the "post.html" template, which contains the structure for a single blog post.
-  This makes the code more modular and easier to maintain.
-  {% endcomment %}
-  <ul>
-    {% for post in all_posts %}
-      {% include "blog/includes/post.html" %}
-    {% endfor %}
+    <h2>My Collected Posts</h2>
     
-  </ul>
+    {% comment %}
+    Include the "post.html" template, which contains the structure for a single blog post.
+    This makes the code more modular and easier to maintain.
+    {% endcomment %}
+    <ul>
+        {% for post in all_posts %}
+            {% include "blog/includes/post.html" %}
+        {% endfor %}
+        
+    </ul>
 </section>
 {% endblock content %}
