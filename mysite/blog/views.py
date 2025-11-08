@@ -1,111 +1,56 @@
 from datetime import date
 from django.shortcuts import render
+from .models import Post
 
 all_posts = [
-  {
-      "slug": "hike-in-the-mountains",
-      "image": "mountains.jpg",
-      "author": "Kyriakos",
-      "date": date(2021, 7, 21),
-      "title": "Mountain Hiking",
-      "excerpt": "There's nothing like the views you get when hiking in the mountains! And I wasn't even prepared for what happened whilst I was enjoying the view!",
-      "content": """
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-      """
-  },
-  {
-      "slug": "programming-is-fun",
-      "image": "coding.jpg",
-      "author": "Kyriakos Ververidis",
-      "date": date(2022, 3, 10),
-      "title": "Programming Is Great!",
-      "excerpt": "Did you ever spend hours searching that one error in your code? Yep - that's what happened to me yesterday...",
-      "content": """
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-      """
-  },
-  {
-      "slug": "into-the-woods",
-      "image": "woods.jpg",
-      "author": "Ververidis",
-      "date": date(2020, 8, 5),
-      "title": "Nature At Its Best",
-      "excerpt": "Nature is amazing! The amount of inspiration I get when walking in nature is incredible!",
-      "content": """
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis nobis
-        aperiam est praesentium, quos iste consequuntur omnis exercitationem quam
-        velit labore vero culpa ad mollitia? Quis architecto ipsam nemo. Odio.
-      """
-  }
+  
 ]
 
 def get_date(post):
-
-  """Get the date from the given post dictionary"""
-  return post["date"]
+    """Get the date from the given post dictionary"""
+    return post["date"]
 
 # Create your views here.
 
+
 def starting_page(request):
-  sorted_posts = sorted(all_posts, key=get_date)
-  latest_posts = sorted_posts[-3:]
+    latest_posts = Post.objects.all().order_by("-date")[:3]
+    # sorted_posts = sorted(all_posts, key=get_date)
+    # latest_posts = sorted_posts[-3:]
 
-  """Context dictionary for the template: contains the 3 
-  most recent posts to display on the index.html template"""
-  context = {
-    "posts": latest_posts
-  }
+    """
+    Context dictionary for the template: contains the 3 
+    most recent posts to display on the index.html template.
+    """
+    context = {
+        "posts": latest_posts
+    }
 
-  """Render the starting (home) page of the blog."""
-  return render(request,"blog/index.html",context )
+    """Render the starting (home) page of the blog."""
+    return render(request, "blog/index.html", context)
 
 def posts(request):
+    """
+    Context dictionary for the template: contains all
+    blog posts to display on the all_posts.html template
+    """
+    context = {
+        "all_posts": all_posts
+    }
 
-  """Context dictionary for the template: contains all
-  blog posts to display on the all_posts.html template"""
-  context = {
-    "all_posts": all_posts
-  }
+    """Display a list of all blog posts."""
+    return render(request, "blog/all-posts.html", context)
 
-  """Display a list of all blog posts."""
-  return render(request,"blog/all-posts.html",context )
+def post_detail(request, slug):
+    identified_post = next(post for post in all_posts if post["slug"] == slug)
 
-def post_detail(request,slug):
-  identified_post = next(post for post in all_posts if post["slug"]==slug)
-
-  """Context dictionary for the template: contains
-  blog post to display on the post-detail.html template"""
-  context = {
-    "post" : identified_post
-  }
+    """
+    Context dictionary for the template: contains
+    blog post to display on the post-detail.html template.
+    """
+    context = {
+        "post": identified_post
+    }
     
-  """Show the details for a single blog post."""
-  return render(request,"blog/post-detail.html",context)
+    """Show the details for a single blog post."""
+    return render(request, "blog/post-detail.html", context)
