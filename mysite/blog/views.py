@@ -1,53 +1,42 @@
-from datetime import date
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Post
 
-all_posts = [
-  
-]
-
-def get_date(post):
-    """Get the date from the given post dictionary"""
-    return post["date"]
 
 # Create your views here.
 
 
 def starting_page(request):
-    latest_posts = Post.objects.all().order_by("-date")[:3]
-    # sorted_posts = sorted(all_posts, key=get_date)
-    # latest_posts = sorted_posts[-3:]
-
     """
-    Context dictionary for the template: contains the 3 
-    most recent posts to display on the index.html template.
+    View for the blog's home page.
+    Retrieves the 3 most recent Post objects from the database
+    (managed through the Django admin) and renders them in the index template.
     """
+    latest_posts = Post.objects.all().order_by("-date")[:3] # Get the 3 latest posts
     context = {
         "posts": latest_posts
     }
-
-    """Render the starting (home) page of the blog."""
     return render(request, "blog/index.html", context)
+
 
 def posts(request):
     """
-    Context dictionary for the template: contains all
-    blog posts to display on the all_posts.html template
+    View for displaying all blog posts.
+    Retrieves all Post objects from the database (managed via Django admin)
+    and renders them in the all-posts template.
     """
+    all_posts = Post.objects.all().order_by("-date") # Get all latest posts from newest
     context = {
         "all_posts": all_posts
     }
-
-    """Display a list of all blog posts."""
     return render(request, "blog/all-posts.html", context)
 
-def post_detail(request, slug):
-    identified_post = next(post for post in all_posts if post["slug"] == slug)
 
+def post_detail(request, slug):
     """
     Context dictionary for the template: contains
     blog post to display on the post-detail.html template.
     """
+    identified_post = get_object_or_404(Post, slug=slug)
     context = {
         "post": identified_post
     }
