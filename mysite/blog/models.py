@@ -46,6 +46,16 @@ class Post(models.Model):
     related_name="posts"
 )  # Author of this post (relationship)
 	tags = models.ManyToManyField(Tag)
+
+
+class Comments(models.Model):
+	"""
+	Represents a comment on a blog post.
+	"""
+	user_name = models.CharField(max_length=120)
+	user_email = models.EmailField()
+	text = models.TextField(max_length=400)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
 	
 
 

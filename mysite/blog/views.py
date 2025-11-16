@@ -50,17 +50,3 @@ class SinglePostView(DetailView):
         return context
     
 	
-
-
-# def post_detail(request, slug):
-#     """
-#     Context dictionary for the template: contains
-#     blog post to display on the post-detail.html template.
-#     """
-#     identified_post = get_object_or_404(Post, slug=slug) # Get the post by slug or return 404 if not found 
-#     context = {
-#         "post": identified_post,
-#         "post_tags":identified_post.tags.all() # Get all tags associated with the post
-#     }
-#     """Show the details for a single blog post."""
-#     return render(request, "blog/post-detail.html", context)
