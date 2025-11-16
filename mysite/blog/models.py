@@ -48,7 +48,7 @@ class Post(models.Model):
 	tags = models.ManyToManyField(Tag)
 
 
-class Comments(models.Model):
+class Comment(models.Model):
 	"""
 	Represents a comment on a blog post.
 	"""
