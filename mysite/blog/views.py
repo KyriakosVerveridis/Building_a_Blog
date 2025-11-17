@@ -50,19 +50,21 @@ class SinglePostView(View):
     Handles displaying a single blog post (GET) and processing new comments (POST)
     """
     def get(self, request, slug):
-        # Retrieve the requested post using its slug.
+        # Fetch the specific post from the database using the unique slug.
         post = Post.objects.get(slug=slug) 
         context = {
             "post": post,
             "post_tags":post.tags.all(),  # Load all tags related to the post
-            "comment_form":CommentForm() # Provide a blank form for new comments
+            "comment_form":CommentForm(), # Provide a blank form for new comments
+             # All comments related to this post (reverse ForeignKey relationship)
+            "comments": post.comments.all().order_by("-id") 
         }
         return render(request, "blog/post-detail.html", context)
 
     def post(self, request, slug):
         # Bind submitted data to the comment form
         comment_form = CommentForm(request.POST)
-        post = Post.objects.get(slug=slug) 
+        post = Post.objects.get(slug=slug)
 
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
@@ -74,7 +76,8 @@ class SinglePostView(View):
         context = {
             "post": post,
             "post_tags":post.tags.all(),
-            "comment_form": comment_form # Re-render the invalid form (with errors)
+            "comment_form": comment_form, # Re-render the invalid form (with errors)
+            "comments": post.comments.all().order_by("-id")
         }
         return render(request, "blog/post-detail.html", context)
 
