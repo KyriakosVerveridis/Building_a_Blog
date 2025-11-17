@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tag,Author,Post
+from .models import Tag, Author, Post, Comment
 
 # Register your models here.
 
@@ -22,4 +22,10 @@ class PostAdmin(admin.ModelAdmin):
 	list_filter= ("author", "author", "tags",)
 	list_display = ("title", "date", "author",)
 	prepopulated_fields = {"slug":("title",)}
+
+
+# Register the Comment model
+@admin.register(Comment) 
+class CommentAdmin(admin.ModelAdmin):
+  	list_display = ("user_name", "post",)		
 	
