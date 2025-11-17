@@ -22,3 +22,4 @@ class PostAdmin(admin.ModelAdmin):
 	list_filter= ("author", "author", "tags",)
 	list_display = ("title", "date", "author",)
 	prepopulated_fields = {"slug":("title",)}
+	
