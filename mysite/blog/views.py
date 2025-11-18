@@ -83,5 +83,42 @@ class SinglePostView(View):
 
 
 class ReadLaterView(View):
+    def get(self,request):
+        # Retrieve the list of post IDs saved in the session 
+        # under the key 'stored_posts'
+        stored_posts = request.session.get("stored_posts")
+
+        # Initialize the context dictionary to pass data to the template 
+        context = {}
+
+        if stored_posts is None or len(stored_posts) == 0:
+            context["posts"] = []
+            context["has_posts"] = False
+        else:
+            # If there are stored posts, query the database # for Post objects matching the stored IDs
+            posts = Post.objects.filter(id__in=stored_posts)
+            # Add the queried posts to the context
+            context["posts"] = posts 
+            # Set a flag to indicate that there are posts to display
+            context["has_posts"] = True   
+        return render(request, "blog/stored-posts.html", context)
+            
+
     def post(self,request):
-        pass
+        # Get the list of post IDs stored in the session dictionary
+        # under the key 'stored_posts'
+        stored_posts = request.session.get("stored_posts")
+
+        if stored_posts is None:
+            stored_posts = []
+        
+        # Get the post ID from the submitted form via POST 
+        # and convert it to an integer
+        post_id = int(request.POST.get("post_id"))   
+
+        if  post_id not in stored_posts:
+            stored_posts.append(post_id)
+            # Update the session with the new list
+            request.session["stored_posts"] = stored_posts  
+
+        return HttpResponseRedirect("/")   

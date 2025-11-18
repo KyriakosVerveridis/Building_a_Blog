@@ -27,8 +27,8 @@
             {% endfor %}
         </div>
         <div id="read-later">
-            <form action="{ url "read-later" }" method="POST">
-                <input type="hidden" value="{{ post.id }}" name="post.id">
+            <form action="{% url "read-later" %}" method="POST">
+                <input type="hidden" value="{{ post.id }}" name="post_id">
                 {% csrf_token %}
                 <button>Read Later</button>
             </form>  
