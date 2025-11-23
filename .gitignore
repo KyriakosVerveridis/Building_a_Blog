@@ -34,3 +34,11 @@ Thumbs.db
 
 # Personal notes
 docs/
+
+# Backup / archive files
+*.zip
+*.tar.gz
+
+# Ignore uploaded media files
+uploads/
+
