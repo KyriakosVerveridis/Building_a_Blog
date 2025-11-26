@@ -26,12 +26,12 @@ SECRET_KEY = 'django-insecure-s!m5xl8hbm*7914d$!c(^q-wl%r4epl5o2vjk82&)%d&ngwwy3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("IS_PRODUCTION", True)
 
-ALLOWED_HOSTS = [
-    getenv("APP_HOST", 
-           "127.0.0.1",
-    # "django-blog.eu-north-1.elasticbeanstalk.com"
-    )
-]
+ALLOWED_HOSTS = ['*']
+
+# ALLOWED_HOSTS = [
+#     getenv("APP_HOST",127.0.0.1,
+#     "django-blog.eu-north-1.elasticbeanstalk.com")
+# ]
 
 
 
@@ -81,26 +81,28 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-import os
 
-if os.getenv("DJANGO_ENV") == "production":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv("DB_NAME"),
-            'USER': os.getenv("DB_USER"),
-            'PASSWORD': os.getenv("DB_PASSWORD"),
-            'HOST': os.getenv("DB_HOST"),
-            'PORT': os.getenv("DB_PORT"),
-        }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': getenv('DB_NAME'),
+#         'USER': getenv('DB_USER'),
+#         'PASSWORD': getenv('DB_PASSWORD'),
+#         'HOST': getenv('DB_HOST'),
+#         'PORT': getenv('DB_PORT', '5432'),
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydb',
+        'USER': 'djangoblog',
+        'PASSWORD': 'djangoblock13',
+        'HOST': 'django-block.c72cy0qggv94.eu-north-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation
