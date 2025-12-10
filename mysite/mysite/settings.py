@@ -11,20 +11,41 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-from os import getenv
+# from os import getenv
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Δημιουργία env αντικειμένου και φόρτωση .env
+env = environ.Env()
+
+ENV_FILE = os.environ.get("DJANGO_ENV", "DEVELOPMENT")
+
+if ENV_FILE == "PRODUCTION":
+    env_file_path = BASE_DIR / ".env.prod"
+else:
+    env_file_path = BASE_DIR / ".env.dev"
+
+# Load the env file only if it exists (in AWS, they do not exist)
+if env_file_path.exists():
+    env.read_env(env_file_path)
+    
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s!m5xl8hbm*7914d$!c(^q-wl%r4epl5o2vjk82&)%d&ngwwy3'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("IS_PRODUCTION", True)
+# DEBUG = getenv("IS_PRODUCTION", True)
+# DEBUG = not env.bool("IS_PRODUCTION", default=False)
+DEBUG = env.bool("DEBUG", default=True)
+# DEBUG = True
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,6 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "blog",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -93,16 +115,58 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydb',
-        'USER': 'djangoblog',
-        'PASSWORD': 'djangoblock13',
-        'HOST': 'django-block.c72cy0qggv94.eu-north-1.rds.amazonaws.com',
-        'PORT': '5432',
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'mydb',
+#         'USER': 'djangoblog',
+#         'PASSWORD': 'djangoblock13',
+#         'HOST': 'django-block.c72cy0qggv94.eu-north-1.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': env("DB_NAME"),
+#             'USER': env("DB_USER"),
+#             'PASSWORD': env("DB_PASSWORD"),
+#             'HOST': env("DB_HOST"),
+#             'PORT': env("DB_PORT", default='5432'),
+#         }
+#     }
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env("DB_NAME"),
+            'USER': env("DB_USER"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'HOST': env("DB_HOST"),
+            'PORT': env("DB_PORT", default='5432'),
+        }
     }
-}
+else:
+    # Production / staging - χρησιμοποιούμε επίσης PostgreSQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env("DB_NAME"),
+            'USER': env("DB_USER"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'HOST': env("DB_HOST"),
+            'PORT': env("DB_PORT", default='5432'),
+        }
+    }
+
 
 
 # Password validation
@@ -139,17 +203,37 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "/static/"
+# ΜΗΝ ΟΡΙΖΕΙΣ STATIC_URL ΕΔΩ — το ορίζουμε στο if DEBUG / else
 
-STATICFILES_DIRS = [
-  BASE_DIR / "static"
-]
+# Σε production δεν πρέπει να χρησιμοποιείται STATICFILES_DIRS
+if DEBUG:
+    STATIC_URL = "/static/"
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATICFILES_DIRS = [BASE_DIR / "static"]
+
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="eu-north-1")
+    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = False
+
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+
+    # STATIC
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+    STATICFILES_STORAGE = "mysite.storage_backends.StaticStorage"
+    
+    # Προσθήκη για να μην σκάει το collectstatic
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+
+    # MEDIA
+    DEFAULT_FILE_STORAGE = "mysite.storage_backends.MediaStorage"
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MEDIA_ROOT = BASE_DIR / "uploads" 
-MEDIA_URL = "/files/"
