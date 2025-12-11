@@ -25,6 +25,8 @@ ENV_FILE = os.environ.get("DJANGO_ENV", "DEVELOPMENT")
 
 if ENV_FILE == "PRODUCTION":
     env_file_path = BASE_DIR / ".env.prod"
+elif ENV_FILE == "TEST":
+    env_file_path = BASE_DIR / ".env.test"
 else:
     env_file_path = BASE_DIR / ".env.dev"
 
@@ -43,7 +45,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = getenv("IS_PRODUCTION", True)
 # DEBUG = not env.bool("IS_PRODUCTION", default=False)
-DEBUG = env.bool("DEBUG", default=True)
+DEBUG = env.bool("DEBUG", default=False)
 # DEBUG = True
 
 
@@ -143,7 +145,20 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 #             'PORT': env("DB_PORT", default='5432'),
 #         }
 #     }
-if DEBUG:
+if ENV_FILE == "DEVELOPMENT":
+    # Development - χρησιμοποιούμε PostgreSQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env("DB_NAME"),
+            'USER': env("DB_USER"),
+            'PASSWORD': env("DB_PASSWORD"),
+            'HOST': env("DB_HOST"),
+            'PORT': env("DB_PORT", default='5432'),
+        }
+    } 
+
+elif ENV_FILE == "TEST":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -154,6 +169,7 @@ if DEBUG:
             'PORT': env("DB_PORT", default='5432'),
         }
     }
+
 else:
     # Production / staging - χρησιμοποιούμε επίσης PostgreSQL
     DATABASES = {
@@ -206,14 +222,24 @@ USE_TZ = True
 # ΜΗΝ ΟΡΙΖΕΙΣ STATIC_URL ΕΔΩ — το ορίζουμε στο if DEBUG / else
 
 # Σε production δεν πρέπει να χρησιμοποιείται STATICFILES_DIRS
-if DEBUG:
+if ENV_FILE == "DEVELOPMENT":
     STATIC_URL = "/static/"
     STATIC_ROOT = BASE_DIR / "staticfiles"
     STATICFILES_DIRS = [BASE_DIR / "static"]
 
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
-else:
+
+elif ENV_FILE == "TEST":
+    # Local storage like production
+    DEBUG = True
+    STATIC_URL = "/static/"
+    STATIC_ROOT = BASE_DIR / "staticfiles_test"
+    STATICFILES_DIRS = [BASE_DIR / "static"]
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media_test"    
+
+else: # PRODUCTION
     AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
     AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="eu-north-1")
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")

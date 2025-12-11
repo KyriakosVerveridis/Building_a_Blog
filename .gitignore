@@ -9,7 +9,9 @@ __pycache__/
 db.sqlite3
 *.log
 media/
+media_test/
 staticfiles/
+staticfiles_test/
 local_settings.py
 
 # Virtual environment
